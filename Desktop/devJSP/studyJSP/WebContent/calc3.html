@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>계산기</title>
+<style>
+input{
+	width: 50px;
+	height: 50px;
+}
+.output{
+	height: 50px;
+	background: #e9e9e9;
+	text-align: right;
+	padding-right: 5px;
+	font-size: 23px;
+	font-weight: bold;
+}
+</style>
+</head>
+<body>
+<h3>계산할 값을 입력하세요.</h3>
+<form action="calcpage" method="post">
+	<table>
+		<tr>
+			<!--colspan = 4 인 이유는 다른 행의 열은 4칸이므로 크기를 맞춰주기 위해-->
+			<td class="output" colspan="4">0</td>
+		</tr>
+		<tr>
+			<td><input type="submit" name="operator" value="CE"></td>
+			<td><input type="submit" name="operator" value="C"></td>
+			<td><input type="submit" name="operator" value="<-"></td>
+			<td><input type="submit" name="operator" value="/"></td>
+		</tr>
+		<tr>
+			<td><input type="submit" name="value" value="7"></td>
+			<td><input type="submit" name="value" value="8"></td>
+			<td><input type="submit" name="value" value="9"></td>
+			<td><input type="submit" name="operator" value="*"></td>
+		</tr>
+		<tr>
+			<td><input type="submit" name="value" value="4"></td>
+			<td><input type="submit" name="value" value="5"></td>
+			<td><input type="submit" name="value" value="6"></td>
+			<td><input type="submit" name="operator" value="-"></td>
+		</tr>
+		<tr>
+			<td><input type="submit" name="value" value="1"></td>
+			<td><input type="submit" name="value" value="2"></td>
+			<td><input type="submit" name="value" value="3"></td>
+			<td><input type="submit" name="operator" value="+"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" name="value" value="0"></td>
+			<td><input type="submit" name="dot" value="."></td>
+			<td><input type="submit" name="operator" value="="></td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>
