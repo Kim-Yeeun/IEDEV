@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+.content-container{	
+	height: 100%;
+	width: 960px;
+	margin:auto;
+}
+
+#body{	
+	min-height: 300px;
+	border-top:5px solid #6699CC;
+	margin-top:1px;
+}
+
+#body > .content-container{ 
+	background:url("../images/bg-body.png") repeat-y center;
+	position: relative;
+	padding-bottom:30px;
+	overflow: auto;
+  	zoom: 1;
+}
+
+main {
+	box-sizing:border-box;
+	min-height: inherit;
+	width: calc(100% - 205px);/* 755px; */	
+	float:left;
+}
+
+
