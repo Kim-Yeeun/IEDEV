@@ -39,6 +39,7 @@ public class ListController extends HttpServlet{
 		req.setAttribute("list", list);
 		req.setAttribute("count", count);
 		
+		
 		req.getRequestDispatcher("/WEB-INF/view/post/list.jsp").forward(req, res);
 	}
 	

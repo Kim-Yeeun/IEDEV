@@ -1,4 +1,4 @@
-package com.iedev.web.controller.notice;
+package com.iedev.web.controller.post;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,27 +15,26 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
-import com.iedev.web.entity.Notice;
-import com.iedev.web.service.NoticeService;
+import com.iedev.web.entity.Post;
+import com.iedev.web.service.PostService;
 
 @MultipartConfig(
-		fileSizeThreshold = 1024*1024, 
+		fileSizeThreshold = 1024*1024,
 		maxFileSize = 1024*1024*5,
 		maxRequestSize = 1024*1024*5*5
 )
-@WebServlet("/notice/reg")
-public class RegController extends HttpServlet{
+@WebServlet("/post/modify")
+public class ModifyController extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		req.getRequestDispatcher("/WEB-INF/view/notice/reg.jsp").forward(req, res);
+		
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		int no = Integer.parseInt(req.getParameter("no"));
 		String title = req.getParameter("title");
 		String content = req.getParameter("content");
-		HttpSession session = req.getSession();
-		String id = (String)session.getAttribute("id");
 		
 		Collection<Part> parts = req.getParts();
 		StringBuilder builder = new StringBuilder();
@@ -73,16 +72,16 @@ public class RegController extends HttpServlet{
 		
 		builder.delete(builder.length()-1, builder.length());
 		
-		Notice notice = new Notice();
-		notice.setTitle(title);
-		notice.setContent(content);
-		notice.setWriterId(id);
-		notice.setFiles(builder.toString());
+		Post post = new Post();
+		post.setNo(no);
+		post.setTitle(title);
+		post.setContent(content);
+		post.setWriterId("official_kim");
+		post.setFiles(builder.toString());
 		
-		NoticeService service = new NoticeService();
-		service.insert(notice);
+		PostService service = new PostService();
+		service.update(post);
 
 		res.sendRedirect("list");
 	}
-	
 }

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.iedev.web.entity.NoticeView;
+import com.iedev.web.entity.Notice;
 import com.iedev.web.service.NoticeService;
 
 @WebServlet("/notice/list")
@@ -33,7 +33,7 @@ public class ListController extends HttpServlet{
 			page = Integer.parseInt(page_);
 		
 		NoticeService service = new NoticeService();
-		List<NoticeView> list = service.getList(field, query, page);	 	
+		List<Notice> list = service.getList(field, query, page);	 	
 		int count = service.getCount(field, query);
 		
 		req.setAttribute("list", list);

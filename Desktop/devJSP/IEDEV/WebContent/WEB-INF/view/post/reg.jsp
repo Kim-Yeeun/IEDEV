@@ -22,25 +22,25 @@
 <body>
 	<div class="container">
 		<br><br>
-		<h4>공지사항 등록</h4><br>
-		<form method="post" action="reg" enctype="multipart/form-data">	
-  		  	<table class="table">
-  	           <tbody>
-      	    	   	<tr>
-               	 		<th>제목</th>
-                    	<td colspan="3">
-                        	<input type="text" class="form-control" name="title"/>
+		<h4>기업 프로젝트 등록</h4><br>
+		<form method="post" action="reg" enctype="multipart/form-data">
+    		<table class="table">
+        	     <tbody>
+        	     	<tr>
+        	        	<th>제목</th>
+                   	 	<td colspan="3">
+                    	    <input type="text" class="form-control" name="title" />
                     	</td>
                 	</tr>
                 	<tr>
-                    	<th>첨부파일1</th>
-                    	<td colspan="3"><input type="file" name="file"/> </td>
+                	    <th>첨부파일1</th>
+                	    <td colspan="3"><input type="file" name="file" /> </td>
                 	</tr>
                 	<tr>
                 	    <th>첨부파일2</th>
-                	    <td colspan="3"><input type="file" name="file"/> </td>
+                	    <td colspan="3"><input type="file" name="file" /> </td>
                 	</tr>
-                	<tr>
+                	<tr class="content">
                 	    <td colspan="4"><textarea class="form-control" name="content" id="content"></textarea></td>
                 	</tr>
              	</tbody>

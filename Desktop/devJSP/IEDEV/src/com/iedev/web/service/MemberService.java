@@ -9,7 +9,6 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import com.iedev.web.entity.Post;
 import com.iedev.web.entity.Member;
 
 public class MemberService {
@@ -222,7 +221,7 @@ public class MemberService {
 	public String checkId(String id) {
 		String result = "y";
 		
-		String sql = "SELECT * FROM MEMBER WHERE ID = '"+id+"'";
+		String sql = "SELECT * FROM MEMBER WHERE ID ='"+id+"'";
 		
 		String url = "jdbc:mysql://localhost:3306/IEDEV";
 		

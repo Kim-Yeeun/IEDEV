@@ -19,23 +19,22 @@ import com.iedev.web.entity.Notice;
 import com.iedev.web.service.NoticeService;
 
 @MultipartConfig(
-		fileSizeThreshold = 1024*1024, 
+		fileSizeThreshold = 1024*1024,
 		maxFileSize = 1024*1024*5,
 		maxRequestSize = 1024*1024*5*5
 )
-@WebServlet("/notice/reg")
-public class RegController extends HttpServlet{
+@WebServlet("/notice/modify")
+public class ModifyController extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		req.getRequestDispatcher("/WEB-INF/view/notice/reg.jsp").forward(req, res);
+		
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		int no = Integer.parseInt(req.getParameter("no"));
 		String title = req.getParameter("title");
 		String content = req.getParameter("content");
-		HttpSession session = req.getSession();
-		String id = (String)session.getAttribute("id");
 		
 		Collection<Part> parts = req.getParts();
 		StringBuilder builder = new StringBuilder();
@@ -74,15 +73,15 @@ public class RegController extends HttpServlet{
 		builder.delete(builder.length()-1, builder.length());
 		
 		Notice notice = new Notice();
+		notice.setNo(no);
 		notice.setTitle(title);
 		notice.setContent(content);
-		notice.setWriterId(id);
+		notice.setWriterId("admin_kim");
 		notice.setFiles(builder.toString());
 		
 		NoticeService service = new NoticeService();
-		service.insert(notice);
+		service.update(notice);
 
 		res.sendRedirect("list");
 	}
-	
 }

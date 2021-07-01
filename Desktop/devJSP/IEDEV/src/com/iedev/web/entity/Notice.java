@@ -4,32 +4,32 @@ import java.util.Date;
 
 public class Notice {
 	
-	private int id;
+	private int no;
 	private String title; 
 	private Date regDate; 
 	private String writerId; 
-	private int hit; 
+	private int views; 
 	private String files; 
 	private String content;
 	
 	public Notice(){}
 
-	public Notice(int id, String title, Date regDate, String writerId, int hit, String files, String content) {
-		this.id = id;
+	public Notice(int no, String title, Date regDate, String writerId, int views, String files, String content) {
+		this.no = no;
 		this.title = title;
 		this.regDate = regDate;
 		this.writerId = writerId;
-		this.hit = hit;
+		this.views = views;
 		this.files = files;
 		this.content = content;
 	}
 
-	public int getId() {
-		return id;
+	public int getNo() {
+		return no;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setNo(int no) {
+		this.no = no;
 	}
 
 	public String getTitle() {
@@ -56,12 +56,12 @@ public class Notice {
 		this.writerId = writerId;
 	}
 
-	public int getHit() {
-		return hit;
+	public int getViews() {
+		return views;
 	}
 
-	public void setHit(int hit) {
-		this.hit = hit;
+	public void setViews(int views) {
+		this.views = views;
 	}
 
 	public String getFiles() {
@@ -82,7 +82,7 @@ public class Notice {
 
 	@Override
 	public String toString() {
-		return "Notice [id=" + id + ", title=" + title + ", writerId=" + writerId + ", hit=" + hit + ", files=" + files
+		return "Notice [no=" + no + ", title=" + title + ", writerId=" + writerId + ", views=" + views + ", files=" + files
 				+ ", content=" + content + "]";
 	}
 }

@@ -13,117 +13,76 @@
 <head>
     <title>I.E.DEV</title>
     <meta charset="UTF-8">
-    
-    <link href="/css/ent/layout.css" type="text/css" rel="stylesheet" />
-    <style>
-    
-        #visual .content-container{	
-            height:inherit;
-            display:flex; 
-            align-items: center;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.2-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/layout.css">
 </head>
 
 <body>
-	<div id="body">
-		<div class="content-container clearfix">
-
-		<main class="main">
-			<h2 class="main title">공지사항</h2>
-			
-			<div class="search-form margin-top first align-right">
-				<h3 class="hidden">공지사항 검색폼</h3>
-				<form class="table-form">
-					<fieldset>
-						<legend class="hidden">공지사항 검색 필드</legend>
-						<label class="hidden">검색분류</label>
-						<select name="f">
-							<option ${ param.f == "title" ? "selected":"" } value="title">제목</option>
-							<option ${ param.f == "writer_id" ? "selected":"" } value="writer_id">작성자</option>
-						</select> 
-						<label class="hidden">검색어</label>
-						<input type="text" name="q" value="${ param.q }"/>
-						<input class="btn btn-search" type="submit" value="검색" />
-					</fieldset>
-				</form>
-			</div>
-			
-			<div class="notice margin-top">
-				<h3 class="hidden">공지사항 목록</h3>
-				<a href="reg">공지 등록</a>
-				<table class="table">
-					<thead>
-						<tr>
-							<th class="w60">번호</th>
-							<th class="expand">제목</th>
-							<th class="w100">작성자</th>
-							<th class="w100">작성일</th>
-							<th class="w60">조회수</th>
-						</tr>
-					</thead>
-					<tbody>
-					
-					<c:forEach var="n" items="${list}">
+	<div class="container">
+		<br><br>
+		<h4>공지사항</h4>
+		<div class="reg-btn" align="right">
+			<c:choose>
+				<c:when test="${sessionScope.type==0}">
+					<a class="btn btn-secondary btn-sm" href="reg">공지사항 등록</a>
+				</c:when>
+			</c:choose>
+		</div>
+		<br>
+		<table class="table table-hover">
+			<thead>
+				<tr style="background-color:#98AFC7">
+					<th>번호</th>
+					<th>제목</th>
+					<th>작성자</th>
+					<th>작성일</th>
+					<th>조회수</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="n" items="${list}">
 					<tr>
-						<td>${n.id}</td>
-						<td class="title indent text-align-left"><a href="detail?id=${n.id}">${n.title}</a><span style="color:red"> ${n.cmtCount == 0 ? "" : [n.cmtCount]}</span></td>
+						<td>${n.no}</td>
+						<td><a href="detail?no=${n.no}">${n.title}</a></td>
 						<td>${n.writerId}</td>
 						<td><fmt:formatDate pattern="yyyy-MM-dd" value="${n.regDate}"/></td>
-						<td>${n.hit}</td>
+						<td>${n.views}</td>
 					</tr>
-					</c:forEach>
-							
-					
-					</tbody>
-				</table>
-			</div>
-			
-			<!-- 임시변수를 위한 태그 -->
-			<c:set var="page" value="${ (empty param.p)?1:param.p }"/>
-			<c:set var="startNum" value="${ page-(page-1)%5 }"/>
-			<c:set var="lastNum" value="${fn:substringBefore(Math.ceil(count/10), '.')}"/>
-			
-			<div class="indexer margin-top align-right">
-				<h3 class="hidden">현재 페이지</h3>
-				<div><span class="text-orange text-strong">${ (empty param.p)? 1 : param.p }</span> / ${lastNum} pages</div>
-			</div>
-
-			<div class="margin-top align-center pager">	
+				</c:forEach>
+			</tbody>
+		</table>
 	
-	<div>
-		<c:if test="${ startNum > 1 }">
-			<a href="?p=${ startNum-1 }&t=&q=" class="btn btn-prev">이전</a>
-		</c:if>
-		<c:if test="${ startNum <= 1 }">
-			<span class="btn btn-prev" onclick="alert('이전 페이지가 없습니다.');">이전</span>
-		</c:if>
-	</div>
+		<c:set var="page" value="${(empty param.p)?1:param.p}"/>
+		<c:set var="startNum" value="${page-(page-1)%5}"/>
+		<c:set var="lastNum" value="${fn:substringBefore(Math.ceil(count/10), '.')}"/>
 	
-	<ul class="-list- center">
-		<c:forEach var="i" begin="0" end="4">
-		<c:if test="${(startNum+i) <= lastNum}">
-		<li><a class="-text- ${ page == startNum+i ? 'orange' : '' } bold" href="?p=${ startNum+i }&f=${ param.f }&q=${ param.q}" >${ startNum+i }</a></li>
-		</c:if>
-		</c:forEach>	
-	</ul>
-	
-	<div>
-		<c:if test="${ startNum+5 <= lastNum }">
-			<a href="?p=${ startNum+5 }&t=&q=" class="btn btn-next">다음</a>
-		</c:if>
-		<c:if test="${ startNum+5 > lastNum }">
-			<span class="btn btn-next" onclick="alert('다음 페이지가 없습니다.');">다음</span>
-		</c:if>	
-	</div>
-	
-			</div>
-		</main>
-		
-			
+		<div class="page-view" style="text-align:right">
+			<span>${(empty param.p)? 1 : param.p}</span> | ${lastNum} pages
 		</div>
+	
+		<div class="page-list" style="text-align:center">
+			<c:if test="${startNum > 1}">
+				<a class="btn btn-prev" href="?p=${startNum-1}&t=&q=">이전</a>
+			</c:if>
+			<c:if test="${startNum <= 1}">
+				<span class="btn btn-prev" onclick="alert('이전 페이지가 없습니다.');">이전</span>
+			</c:if>
+			<c:forEach var="i" begin="0" end="4">
+				<c:if test="${(startNum+i) <= lastNum}">
+					<a class="-text- ${page == startNum+i ? 'orange' : ''} bold" href="?p=${ startNum+i }&f=${ param.f }&q=${ param.q}" >${ startNum+i }</a>
+				</c:if>
+			</c:forEach>
+			<c:if test="${startNum+5 <= lastNum}">
+				<a class="btn btn-next" href="?p=${ startNum+5 }&t=&q=">다음</a>
+			</c:if>
+			<c:if test="${startNum+5 > lastNum}">
+				<span class="btn btn-next" onclick="alert('다음 페이지가 없습니다.');">다음</span>
+			</c:if>		
+		</div>
+		<br>
 	</div>
+</body>
 
-    </body>
-    
-    </html>
+</html>
+
+<%@ include file="../include/footer.jsp" %>

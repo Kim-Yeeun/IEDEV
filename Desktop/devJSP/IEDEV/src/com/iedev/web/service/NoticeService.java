@@ -10,11 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.iedev.web.entity.Notice;
-import com.iedev.web.entity.NoticeView;
 
 public class NoticeService {
 
-	// 공지사항 등록 서비스 
 	public int insert(Notice notice) {
 		int result = 0;
 		
@@ -44,10 +42,10 @@ public class NoticeService {
 		return result;
 	}
 	
-	public int delete(int id) {
+	public int delete(int no) {
 		int result = 0;
 		
-		String sql = "DELETE FROM NOTICE WHERE ID = ?";
+		String sql = "DELETE FROM NOTICE WHERE NO = ?";
 		
 		String url = "jdbc:mysql://localhost:3306/IEDEV";
 
@@ -55,9 +53,9 @@ public class NoticeService {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection(url, "admin", "kimyeeun");
 			PreparedStatement st = con.prepareStatement(sql);
-			st.setInt(1, id);
+			st.setInt(1, no);
 			
-			result = st.executeUpdate();
+			st.executeUpdate();
 			
 			st.close();
 			con.close();
@@ -73,7 +71,7 @@ public class NoticeService {
 	public int update(Notice notice) {
 		int result = 0;
 		
-		String sql = "UPDATE NOTICE SET TITLE = ?, CONTENT = ?, FILES = ? WHERE ID = ?";
+		String sql = "UPDATE NOTICE SET TITLE = ?, CONTENT = ?, FILES = ? WHERE NO = ?";
 		
 		String url = "jdbc:mysql://localhost:3306/IEDEV";
 
@@ -84,7 +82,7 @@ public class NoticeService {
 			st.setString(1, notice.getTitle());
 			st.setString(2, notice.getContent());
 			st.setString(3, notice.getFiles());
-			st.setInt(4, notice.getId());
+			st.setInt(4, notice.getNo());
 			
 			result = st.executeUpdate();
 			
@@ -99,25 +97,24 @@ public class NoticeService {
 		return result;
 	}
 	
-	// 공지사항 목록 서비스 
-	public List<NoticeView> getList() {
+	public List<Notice> getList() {
 		
 		return getList("title", "", 1);
 	}
 	
-	public List<NoticeView> getList(int page) {
+	public List<Notice> getList(int page) {
 		
 		
 		return getList("title", "", page);
 	}
 	
-	public List<NoticeView> getList(String field, String query, int page){
-		List<NoticeView> list = new ArrayList<>(); 
+	public List<Notice> getList(String field, String query, int page){
+		List<Notice> list = new ArrayList<>(); 
 		
 		String sql = "SELECT * FROM ("
 				+ "SELECT @ROWNUM:=@ROWNUM+1 NUM, "
 				+ "N.* "
-				+ "FROM NOTICE_VIEW N, "
+				+ "FROM NOTICE N, "
 				+ "(SELECT @ROWNUM:=0) R "
 				+ "WHERE "+field+" LIKE ? "
 				+ "ORDER BY REGDATE DESC "
@@ -136,23 +133,22 @@ public class NoticeService {
 			ResultSet rs = st.executeQuery();
 			
 			while(rs.next()) {
-				int id = rs.getInt("ID");
+				int no = rs.getInt("NO");
 				String title = rs.getString("TITLE"); 
 			 	Timestamp regDate = rs.getTimestamp("REGDATE"); 
 			 	String writerId = rs.getString("WRITERID"); 
-			 	int hit = rs.getInt("HIT"); 
-			 	String files = rs.getString("FILES"); 
-			 	//String content = rs.getString("CONTENT");
-			 	int cmtCount = rs.getInt("CMT_COUNT");
+			 	int views = rs.getInt("VIEWS"); 
+			 	String files = rs.getString("FILES");
+			 	String content = rs.getString("content");
 			 	
-			 	NoticeView notice = new NoticeView(
-		 				id,
+			 	Notice notice = new Notice(
+			 			no,
 		 				title,
 		 				regDate,
 		 				writerId,
-		 				hit,
+		 				views,
 		 				files,
-		 				cmtCount
+		 				content
 		 			);
 			 	
 			 	list.add(notice);
@@ -178,7 +174,7 @@ public class NoticeService {
 	public int getCount(String field, String query) {
 		int count = 0;
 		
-		String sql = "SELECT COUNT(ID) COUNT FROM ("
+		String sql = "SELECT COUNT(NO) COUNT FROM ("
 				+ "SELECT @ROWNUM:=@ROWNUM+1 NUM, "
 				+ "N.* "
 				+ "FROM NOTICE N, "
@@ -211,10 +207,10 @@ public class NoticeService {
 		return count;
 	}
 	
-	public Notice getInfo(int id) {
+	public Notice getInfo(int no) {
 		Notice notice = null;
 		
-		String sql = "SELECT * FROM NOTICE WHERE ID = ?";
+		String sql = "SELECT * FROM NOTICE WHERE NO = ?";
 		
 		String url = "jdbc:mysql://localhost:3306/IEDEV";
 
@@ -222,24 +218,24 @@ public class NoticeService {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection(url, "admin", "kimyeeun");
 			PreparedStatement st = con.prepareStatement(sql);
-			st.setInt(1, id);
+			st.setInt(1, no);
 			ResultSet rs = st.executeQuery();
 			
 			if(rs.next()) {
-				int nid = rs.getInt("ID");
+				int no_ = rs.getInt("NO");
 				String title = rs.getString("TITLE"); 
 				Timestamp regDate = rs.getTimestamp("REGDATE");
 			 	String writerId = rs.getString("WRITERID"); 
-			 	int hit = rs.getInt("HIT"); 
+			 	int views = rs.getInt("VIEWS"); 
 			 	String files = rs.getString("FILES"); 
 			 	String content = rs.getString("CONTENT");
 			 	
 			 	notice = new Notice(
-		 				nid,
+			 			no_,
 		 				title,
 		 				regDate,
 		 				writerId,
-		 				hit,
+		 				views,
 		 				files,
 		 				content
 		 			);
@@ -257,10 +253,10 @@ public class NoticeService {
 		return notice;
 	}
 	
-	public Notice getNextNotice(int id) {
+	public Notice getNextNotice(int no) {
 		Notice notice = null;
 		
-		String sql = "SELECT * FROM NOTICE WHERE ID = (SELECT MIN(ID) FROM NOTICE WHERE ID > ?)";
+		String sql = "SELECT * FROM NOTICE WHERE NO = (SELECT MIN(NO) FROM NOTICE WHERE NO > ?)";
 		
 		String url = "jdbc:mysql://localhost:3306/IEDEV";
 
@@ -268,24 +264,24 @@ public class NoticeService {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection(url, "admin", "kimyeeun");
 			PreparedStatement st = con.prepareStatement(sql);
-			st.setInt(1, id);
+			st.setInt(1, no);
 			ResultSet rs = st.executeQuery();
 			
 			if(rs.next()) {
-				int nid = rs.getInt("ID");
+				int no_ = rs.getInt("NO");
 				String title = rs.getString("TITLE"); 
 				Timestamp regDate = rs.getTimestamp("REGDATE"); 
 			 	String writerId = rs.getString("WRITERID"); 
-			 	int hit = rs.getInt("HIT"); 
+			 	int views = rs.getInt("VIEWS"); 
 			 	String files = rs.getString("FILES"); 
 			 	String content = rs.getString("CONTENT");
 			 	
 			 	notice = new Notice(
-		 				nid,
+			 			no_,
 		 				title,
 		 				regDate,
 		 				writerId,
-		 				hit,
+		 				views,
 		 				files,
 		 				content
 		 			);
@@ -303,10 +299,10 @@ public class NoticeService {
 		return notice;
 	}
 	
-	public Notice getPrevNotice(int id) {
+	public Notice getPrevNotice(int no) {
 		Notice notice = null;
 		
-		String sql = "SELECT * FROM NOTICE WHERE ID = (SELECT MAX(ID) FROM NOTICE WHERE ID < ?)";
+		String sql = "SELECT * FROM NOTICE WHERE NO = (SELECT MAX(NO) FROM NOTICE WHERE NO < ?)";
 		
 		String url = "jdbc:mysql://localhost:3306/IEDEV";
 
@@ -314,24 +310,24 @@ public class NoticeService {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection(url, "admin", "kimyeeun");
 			PreparedStatement st = con.prepareStatement(sql);
-			st.setInt(1, id);
+			st.setInt(1, no);
 			ResultSet rs = st.executeQuery();
 			
 			if(rs.next()) {
-				int nid = rs.getInt("ID");
+				int no_ = rs.getInt("NO");
 				String title = rs.getString("TITLE"); 
 				Timestamp regDate = rs.getTimestamp("REGDATE");
 			 	String writerId = rs.getString("WRITERID"); 
-			 	int hit = rs.getInt("HIT"); 
+			 	int views = rs.getInt("VIEWS");
 			 	String files = rs.getString("FILES"); 
 			 	String content = rs.getString("CONTENT");
 			 	
 			 	notice = new Notice(
-		 				nid,
+			 			no_,
 		 				title,
 		 				regDate,
 		 				writerId,
-		 				hit,
+		 				views,
 		 				files,
 		 				content
 		 			);
@@ -347,5 +343,26 @@ public class NoticeService {
 		}
 		
 		return notice;
+	}
+	
+	public void updateViews(int no) {
+		String sql = "UPDATE NOTICE SET VIEWS = VIEWS + 1 WHERE NO = ?";
+		
+		String url = "jdbc:mysql://localhost:3306/IEDEV";
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection(url, "admin", "kimyeeun");
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setInt(1, no);
+			st.executeUpdate();
+			
+			st.close();
+			con.close();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

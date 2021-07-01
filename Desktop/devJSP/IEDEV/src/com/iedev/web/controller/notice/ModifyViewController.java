@@ -7,35 +7,27 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.iedev.web.entity.Notice;
 import com.iedev.web.service.NoticeService;
 
-@WebServlet("/notice/detail")
-public class DetailController extends HttpServlet{
+@WebServlet("/notice/modifyView")
+public class ModifyViewController extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		int no = Integer.parseInt(req.getParameter("no"));
-
+		
 		NoticeService service = new NoticeService();
 		Notice notice = service.getInfo(no);
 		
-		Notice noticeNext = new Notice(); 
-		noticeNext = service.getNextNotice(no);
+		req.setAttribute("notice", notice);
 		
-		Notice noticePrev = new Notice();
-		noticePrev = service.getPrevNotice(no);
-		
-		service.updateViews(no);
-		
-		req.setAttribute("n", notice);
-		req.setAttribute("next", noticeNext);
-		req.setAttribute("prev", noticePrev);
-		
-		req.getRequestDispatcher("/WEB-INF/view/notice/detail.jsp").forward(req, res);
+		req.getRequestDispatcher("/WEB-INF/view/notice/modify.jsp").forward(req, res);
 	}
+	
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
 	}
 }
